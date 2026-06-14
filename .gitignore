@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# 存档目录
+saves/*.json
+!saves/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
+
+# 工作文件
+.workbuddy/
