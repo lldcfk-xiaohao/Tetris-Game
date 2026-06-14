@@ -11,7 +11,7 @@ LAN_UDP = 19528
 SAVE_DIR = "saves"
 
 M_CLASSIC, M_SPEED, M_MARATHON, M_ZEN = 0, 1, 2, 3
-MODE_NAMES = ["经典模式", "极速模式", "马拉松", "禅模式"]
+MODE_NAMES = ["Classic", "Speed Run", "Marathon", "Zen"]
 
 # 状态
 S_MENU, S_LEVEL, S_LOAD, S_LAN, S_LAN_HOST, S_LAN_JOIN = 0, 1, 2, 3, 4, 5
@@ -308,12 +308,12 @@ class App:
         pygame.init()
         self.W, self.H = 640, 640
         self.screen = pygame.display.set_mode((self.W, self.H))
-        pygame.display.set_caption("俄罗斯方块")
+        pygame.display.set_caption("Tetris")
         self.clock = pygame.time.Clock()
-        self.fn  = pygame.font.Font("C:/Windows/Fonts/simhei.ttf", 20)
-        self.fnl = pygame.font.Font("C:/Windows/Fonts/simhei.ttf", 36)
-        self.fns = pygame.font.Font("C:/Windows/Fonts/simhei.ttf", 16)
-        self.fnx = pygame.font.Font("C:/Windows/Fonts/simhei.ttf", 48)
+        self.fn  = pygame.font.SysFont("arial", 20)
+        self.fnl = pygame.font.SysFont("arial", 36)
+        self.fns = pygame.font.SysFont("arial", 16)
+        self.fnx = pygame.font.SysFont("arial", 48)
         self.game = None
         self.state = S_MENU
         self.menu_sel = self.level_sel = self.load_sel = 0
@@ -414,7 +414,7 @@ class App:
 
     # ====== MENU ======
     def _k_menu(self, key):
-        items = ["经典模式","极速模式","马拉松","禅模式","读取存档","联机对战","退出"]
+        items = ["Classic","Speed Run","Marathon","Zen","Load Save","LAN Battle","Quit"]
         if key == pygame.K_UP:   self.menu_sel = (self.menu_sel - 1) % len(items)
         if key == pygame.K_DOWN: self.menu_sel = (self.menu_sel + 1) % len(items)
         if key == pygame.K_RETURN:
@@ -427,9 +427,9 @@ class App:
         if key == pygame.K_ESCAPE: self._quit()
 
     def _draw_menu(self):
-        self._txtc("俄 罗 斯 方 块", 80, GOLD, self.fnx)
-        self._draw_items(["经典模式","极速模式","马拉松","禅模式",
-                          "读取存档","联机对战","退出"], self.menu_sel, 200)
+        self._txtc("T E T R I S", 80, GOLD, self.fnx)
+        self._draw_items(["Classic","Speed Run","Marathon","Zen",
+                          "Load Save","LAN Battle","Quit"], self.menu_sel, 200)
 
     # ====== LEVEL SEL ======
     def _k_level(self, key):
@@ -439,9 +439,9 @@ class App:
         if key == pygame.K_ESCAPE: self._go(S_MENU)
 
     def _draw_level(self):
-        self._txtc("选择起始等级", 160, WHITE, self.fnl)
+        self._txtc("Select Start Level", 160, WHITE, self.fnl)
         self._txtc(f"<  {self.level_sel + 1}  >", 260, GOLD, self.fnx)
-        self._txtc("左右键调整  Enter确认  Esc返回", 360, GRAY, self.fns)
+        self._txtc("Left/Right adjust  Enter confirm  Esc back", 360, GRAY, self.fns)
 
     # ====== LOAD ======
     def _k_load(self, key):
@@ -455,18 +455,18 @@ class App:
         if key == pygame.K_ESCAPE: self._go(S_MENU)
 
     def _draw_load(self):
-        self._txtc("读取存档", 40, WHITE, self.fnl)
+        self._txtc("Load Save", 40, WHITE, self.fnl)
         saves = self.saves.list_all()
         for i, (slot, d) in enumerate(saves):
             y = 120 + i * 70
             c = GOLD if i == self.load_sel else WHITE
             p = "> " if i == self.load_sel else "  "
             if d:
-                self._txt(f"{p}存档 {i+1}: {MODE_NAMES[d['mode']]}  分数:{d['score']}  {d.get('time','')}",
+                self._txt(f"{p}Slot {i+1}: {MODE_NAMES[d['mode']]}  Score:{d['score']}  {d.get('time','')}",
                           60, y, c)
             else:
-                self._txt(f"{p}存档 {i+1}: (空)", 60, y, GRAY)
-        self._txtc("Enter读取  Del删除  Esc返回", 400, GRAY, self.fns)
+                self._txt(f"{p}Slot {i+1}: (Empty)", 60, y, GRAY)
+        self._txtc("Enter load  Del delete  Esc back", 400, GRAY, self.fns)
 
     # ====== LAN MENU ======
     def _k_lan(self, key):
@@ -475,32 +475,32 @@ class App:
         if key == pygame.K_RETURN:
             if self.lan_sel == 0:
                 try:
-                    self.net.host("主机"); self._go(S_LAN_HOST)
+                    self.net.host("Host"); self._go(S_LAN_HOST)
                 except Exception as e:
-                    self.err_msg = f"创建失败: {e}"; self.err_time = 180
+                    self.err_msg = f"Create failed: {e}"; self.err_time = 180
             elif self.lan_sel == 1:
                 try:
                     self.net.start_scan(); self._go(S_LAN_JOIN); self.lan_join_sel = 0
                 except Exception as e:
-                    self.err_msg = f"扫描失败: {e}"; self.err_time = 180
+                    self.err_msg = f"Scan failed: {e}"; self.err_time = 180
             else: self._go(S_LAN)
         if key == pygame.K_ESCAPE: self.net.stop(); self._go(S_MENU)
 
     def _draw_lan(self):
-        self._txtc("联机对战", 120, WHITE, self.fnl)
-        self._txtc("局域网直连 无需服务器", 170, GRAY, self.fns)
-        self._draw_items(["创建房间","搜索房间","返回"], self.lan_sel, 240)
+        self._txtc("LAN Battle", 120, WHITE, self.fnl)
+        self._txtc("Local network direct connect, no server", 170, GRAY, self.fns)
+        self._draw_items(["Create Room","Search Room","Back"], self.lan_sel, 240)
 
     # ====== LAN HOST ======
     def _k_lan_host(self, key):
         if key == pygame.K_ESCAPE: self.net.stop(); self._go(S_LAN)
 
     def _draw_lan_host(self):
-        self._txtc("等待对手加入...", 150, WHITE, self.fnl)
-        self._txtc(f"本机IP: {get_local_ip()}", 220, GRAY)
+        self._txtc("Waiting for opponent...", 150, WHITE, self.fnl)
+        self._txtc(f"Your IP: {get_local_ip()}", 220, GRAY)
         dots = "." * (1 + (self.anim_t // 30) % 3)
-        self._txtc(f"等待中{dots}", 280, WHITE)
-        self._txtc("Esc 取消", 360, GRAY, self.fns)
+        self._txtc(f"Waiting{dots}", 280, WHITE)
+        self._txtc("Esc cancel", 360, GRAY, self.fns)
         if self.net.connected:
             self._start_lan()
 
@@ -515,20 +515,20 @@ class App:
                 try:
                     self.net.join(ip); self._start_lan()
                 except Exception as e:
-                    self.err_msg = f"连接失败: {e}"; self.err_time = 180
+                    self.err_msg = f"Connect failed: {e}"; self.err_time = 180
         if key == pygame.K_ESCAPE: self.net.stop(); self._go(S_LAN)
 
     def _draw_lan_join(self):
-        self._txtc("搜索房间中...", 40, WHITE, self.fnl)
+        self._txtc("Searching for rooms...", 40, WHITE, self.fnl)
         if not self.net.found:
             dots = "." * (1 + (self.anim_t // 30) % 3)
-            self._txtc(f"扫描中{dots}", 120, GRAY)
+            self._txtc(f"Scanning{dots}", 120, GRAY)
         else:
             for i, (ip, name) in enumerate(self.net.found):
                 c = GOLD if i == self.lan_join_sel else WHITE
                 p = "> " if i == self.lan_join_sel else "  "
                 self._txt(f"{p}{name} ({ip})", 80, 100 + i * 40, c)
-        self._txtc("Enter加入  Esc返回", 550, GRAY, self.fns)
+        self._txtc("Enter join  Esc back", 550, GRAY, self.fns)
 
     # ====== PLAY ======
     def _k_play(self, key):
@@ -553,14 +553,14 @@ class App:
 
     # ====== PAUSE ======
     def _k_pause(self, key):
-        items = ["继续","保存","返回主菜单"]
+        items = ["Resume","Save","Back to Menu"]
         if key == pygame.K_UP:   self.pause_sel = (self.pause_sel - 1) % len(items)
         if key == pygame.K_DOWN: self.pause_sel = (self.pause_sel + 1) % len(items)
         if key == pygame.K_RETURN:
             if self.pause_sel == 0: self._go(S_PLAY)
             elif self.pause_sel == 1:
                 self.saves.save(self.game, 0)
-                self.err_msg = "已保存!"; self.err_time = 90
+                self.err_msg = "Saved!"; self.err_time = 90
             elif self.pause_sel == 2: self._go(S_MENU)
         if key == pygame.K_ESCAPE: self._go(S_PLAY)
 
@@ -568,8 +568,8 @@ class App:
         self._draw_play()
         ov = pygame.Surface((self.W, self.H), pygame.SRCALPHA); ov.fill((0,0,0,160))
         self.screen.blit(ov, (0,0))
-        self._txtc("暂停", 200, WHITE, self.fnl)
-        self._draw_items(["继续","保存","返回主菜单"], self.pause_sel, 280)
+        self._txtc("Paused", 200, WHITE, self.fnl)
+        self._draw_items(["Resume","Save","Back to Menu"], self.pause_sel, 280)
 
     # ====== OVER ======
     def _k_over(self, key):
@@ -589,24 +589,24 @@ class App:
             ov = pygame.Surface((self.W, self.H), pygame.SRCALPHA); ov.fill((0,0,0,180))
             self.screen.blit(ov, (0,0))
             if self.vs_result == "win":
-                self._txtc("胜利!", 220, (50,255,50), self.fnx)
+                self._txtc("Victory!", 220, (50,255,50), self.fnx)
             elif self.vs_result == "lose":
-                self._txtc("失败", 220, (255,60,60), self.fnx)
+                self._txtc("Defeat", 220, (255,60,60), self.fnx)
             else:
-                self._txtc("游戏结束", 220, (255,60,60), self.fnx)
-            self._txtc(f"分数: {self.game.score}", 300, WHITE, self.fnl)
-            self._txtc("Esc 返回主菜单", 380, GRAY)
+                self._txtc("Game Over", 220, (255,60,60), self.fnx)
+            self._txtc(f"Score: {self.game.score}", 300, WHITE, self.fnl)
+            self._txtc("Esc back to menu", 380, GRAY)
         else:
             self._draw_play()
             ov = pygame.Surface((self.W, self.H), pygame.SRCALPHA); ov.fill((0,0,0,180))
             self.screen.blit(ov, (0,0))
             if self.game.won:
-                self._txtc("通关!", 220, (50,255,50), self.fnx)
+                self._txtc("Cleared!", 220, (50,255,50), self.fnx)
             else:
-                self._txtc("游戏结束", 220, (255,60,60), self.fnx)
-            self._txtc(f"分数: {self.game.score}", 300, WHITE, self.fnl)
-            self._txtc(f"行数: {self.game.lines}", 340, WHITE)
-            self._txtc("R 重新开始  Esc 返回主菜单", 410, GRAY, self.fns)
+                self._txtc("Game Over", 220, (255,60,60), self.fnx)
+            self._txtc(f"Score: {self.game.score}", 300, WHITE, self.fnl)
+            self._txtc(f"Lines: {self.game.lines}", 340, WHITE)
+            self._txtc("R restart  Esc back to menu", 410, GRAY, self.fns)
 
     # ====== start game ======
     def _start_game(self, mode, start_level, data=None):
@@ -720,7 +720,7 @@ class App:
             self._txtc(self.err_msg, self.H - 50, (255,100,100), self.fns)
         # 标题栏
         if self.state in (S_PLAY, S_LAN_PLAY, S_PAUSE, S_OVER):
-            pygame.display.set_caption(f"俄罗斯方块 - {MODE_NAMES[self.game.mode]}")
+            pygame.display.set_caption(f"Tetris - {MODE_NAMES[self.game.mode]}")
 
     # --- 单人游戏绘制 ---
     def _draw_play(self):
@@ -729,18 +729,18 @@ class App:
         self._draw_piece(g, ox, oy, CELL)
         # 侧边栏
         sx = ox + COLS*CELL + 24
-        self._txt("下一个", sx, 20, GRAY, self.fns)
+        self._txt("Next", sx, 20, GRAY, self.fns)
         self._draw_next(g.next, sx, 44, CELL-4)
-        self._txt(f"分数  {g.score}", sx, 160, WHITE)
-        self._txt(f"等级  {g.level+1}", sx, 195, WHITE)
-        self._txt(f"行数  {g.lines}", sx, 230, WHITE)
+        self._txt(f"Score  {g.score}", sx, 160, WHITE)
+        self._txt(f"Level  {g.level+1}", sx, 195, WHITE)
+        self._txt(f"Lines  {g.lines}", sx, 230, WHITE)
         if g.mode == M_MARATHON:
-            self._txt(f"目标  {min(g.lines,150)}/150", sx, 265, GOLD, self.fns)
+            self._txt(f"Goal  {min(g.lines,150)}/150", sx, 265, GOLD, self.fns)
         if g.mode == M_ZEN:
-            self._txt("禅模式 无结束", sx, 265, (100,200,255), self.fns)
+            self._txt("Zen  no end", sx, 265, (100,200,255), self.fns)
         # 操作提示
         hy = 340
-        for t in ["方向键 移动","上键  旋转","下键  软降","空格  硬降","Esc  暂停"]:
+        for t in ["Arrows  Move","Up  Rotate","Down  Soft Drop","Space  Hard Drop","Esc  Pause"]:
             self._txt(t, sx, hy, GRAY, self.fns); hy += 22
 
     # --- 联机绘制 ---
@@ -749,16 +749,16 @@ class App:
         c = CELL_LAN
         # 你的棋盘
         ox1, oy1 = 15, 55
-        self._txt("你", ox1, 10, GOLD)
-        self._txt(f"分数:{g.score} 行:{g.lines}", ox1, 32, GRAY, self.fns)
+        self._txt("You", ox1, 10, GOLD)
+        self._txt(f"Score:{g.score} Lines:{g.lines}", ox1, 32, GRAY, self.fns)
         self._draw_board(g.board, ox1, oy1, c)
         self._draw_piece(g, ox1, oy1, c)
         # VS
         self._txtc("VS", 280, WHITE, self.fnl)
         # 对手棋盘
         ox2 = ox1 + COLS*c + 40
-        self._txt("对手", ox2, 10, (255,100,100))
-        self._txt(f"分数:{self.opp_score} 行:{self.opp_lines}", ox2, 32, GRAY, self.fns)
+        self._txt("Rival", ox2, 10, (255,100,100))
+        self._txt(f"Score:{self.opp_score} Lines:{self.opp_lines}", ox2, 32, GRAY, self.fns)
         if self.opp_board:
             self._draw_board(self.opp_board, ox2, oy1, c)
             # 对手当前方块
@@ -768,7 +768,7 @@ class App:
                     r = pygame.Rect(ox2+cx*c+1, oy1+cy*c+1, c-2, c-2)
                     pygame.draw.rect(self.screen, clr, r)
         # 下一个方块
-        self._txt("下一个", ox2, oy1+ROWS*c+8, GRAY, self.fns)
+        self._txt("Next", ox2, oy1+ROWS*c+8, GRAY, self.fns)
         self._draw_next(g.next, ox2, oy1+ROWS*c+30, c-6)
 
     def _opp_cells(self):

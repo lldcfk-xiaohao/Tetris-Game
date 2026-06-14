@@ -1,61 +1,68 @@
-# 俄罗斯方块 Tetris
+# Tetris
 
-Python 实现的俄罗斯方块，功能丰富，界面美观。
+A feature-rich Tetris game built with Python and pygame.
 
-## 功能特性
+## Features
 
-### 🎮 四种玩法
-| 模式 | 说明 |
-|------|------|
-| **经典模式** | 选择起始等级（1~15），速度随等级递增 |
-| **极速模式** | 从高速开始，节奏紧张刺激 |
-| **马拉松** | 目标消 150 行通关，慢起步 |
-| **禅模式** | 无游戏结束，放松游玩 |
+### 🎮 Four Game Modes
+| Mode | Description |
+|------|-------------|
+| **Classic** | Choose start level (1–15), speed increases with level |
+| **Speed Run** | Starts at high speed, intense gameplay |
+| **Marathon** | Clear 150 lines to win, slow start |
+| **Zen** | No game over, relax and play |
 
-### ✨ 核心功能
-- **7 种标准方块** — I / O / T / S / Z / J / L，各 4 个旋转态
-- **影子预览** — 半透明显示方块将落到的位置
-- **下一个方块预览** — 右侧实时显示
-- **消行计分** — 1行100 / 2行300 / 3行500 / 4行800，乘以等级
-- **DAS 自动重复** — 长按方向键自动连续移动
-- **3 个存档槽位** — 随时保存/读取进度
+### ✨ Core Features
+- **7 standard tetrominoes** — I / O / T / S / Z / J / L, each with 4 rotation states
+- **Shadow preview** — semi-transparent ghost shows where piece will land
+- **Next piece preview** — displayed on the side panel
+- **Scoring** — 1 line: 100 / 2 lines: 300 / 3 lines: 500 / 4 lines: 800, multiplied by level
+- **DAS (Delayed Auto Shift)** — hold arrow keys for auto-repeat movement
+- **3 save slots** — save and load progress anytime
 
-### 🌐 局域网联机对战
-- **无需服务器、无需内网映射**
-- 创建房间自动广播 IP，其他人搜索即可发现
-- 双屏同显，实时对战
-- 消行攻击：消 2 行发 1 行垃圾，消 3 行发 2 行，消 4 行发 4 行
-- 对手出局即胜利
+### 🌐 LAN Multiplayer
+- **No server needed, no port forwarding required**
+- Host broadcasts IP automatically; others can discover and join
+- Real-time versus on the same screen
+- Garbage attack: clear 2 lines → send 1, 3 lines → send 2, 4 lines → send 4
+- Opponent tops out = you win
 
-## 操作说明
+## Controls
 
-| 操作 | 按键 |
-|------|------|
-| 左右移动 | ← → |
-| 旋转 | ↑ |
-| 加速下落 | ↓ |
-| 硬降（直落） | 空格 |
-| 暂停 | P / ESC |
-| 保存/读取 | 暂停菜单中选择 |
-| 退出 | ESC（多次） |
+| Action | Key |
+|--------|-----|
+| Move left/right | ← → |
+| Rotate | ↑ |
+| Soft drop | ↓ |
+| Hard drop | Space |
+| Pause | P / ESC |
+| Save / Load | Use pause menu |
+| Quit | ESC (multiple presses) |
 
-## 安装运行
+## How to Run
 
-### 方式一：直接下载 exe（推荐）
-前往 [Releases](https://github.com/lldcfk-xiaohao/tetris/releases) 页面下载 `tetris.exe`，双击运行，无需安装 Python。
+### Option 1: Download exe (Recommended)
+Go to [Releases](https://github.com/lldcfk-xiaohao/tetris/releases) and download `tetris.exe`. Double-click to run, no Python required.
 
-### 方式二：运行 Python 源码
+### Option 2: Run from source
 ```bash
 pip install pygame
 python tetris.py
 ```
 
-## 技术要求
+## Build exe yourself
+```bash
+pip install pygame pyinstaller
+pyinstaller --onefile --windowed --name tetris tetris.py
+# exe will be in dist/tetris.exe
+```
+
+## Tech Stack
 - Python 3.8+
 - pygame 2.0+
 
-## 许可证
+## License
 MIT License
 
-## 作者
+## Author
 [lldcfk-xiaohao](https://github.com/lldcfk-xiaohao)
