@@ -310,10 +310,10 @@ class App:
         self.screen = pygame.display.set_mode((self.W, self.H))
         pygame.display.set_caption("Tetris")
         self.clock = pygame.time.Clock()
-        self.fn  = pygame.font.SysFont("arial", 20)
-        self.fnl = pygame.font.SysFont("arial", 36)
-        self.fns = pygame.font.SysFont("arial", 16)
-        self.fnx = pygame.font.SysFont("arial", 48)
+        self.fn  = pygame.font.Font(None, 22)
+        self.fnl = pygame.font.Font(None, 40)
+        self.fns = pygame.font.Font(None, 18)
+        self.fnx = pygame.font.Font(None, 52)
         self.game = None
         self.state = S_MENU
         self.menu_sel = self.level_sel = self.load_sel = 0
